@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+sys.path.insert(0, BASE_DIR)
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -26,7 +29,7 @@ SECRET_KEY = '5poco(om*yl!@(w2_f=a9mytilte#xjyy!-eq(*n2x-)@j^9y^'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'users.UserProfile'
 
 # Application definition
 
@@ -36,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.users.apps.UsersConfig',
+    'xadmin',
+    'crispy_forms',
+    'apps.blog.apps.BlogConfig',
+    'apps.book.apps.BookConfig',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +83,20 @@ WSGI_APPLICATION = 'DjangoBlog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2','mysql', 'sqlite3' or 'oracle'
+
+        'NAME': 'djangoblog',  # Your db name, Or path to database file if using sqlite3
+
+        'USER': 'root',  # Your db user name, Not used with sqlite3
+
+        'PASSWORD': 'password',  # Your db password, Not used with sqlite3
+
+        'HOST': '127.0.0.1',  # Your db host, set to empty string('') for default for localhost,  Not used with sqlite3
+
+        'PORT': '3306',  # Your db port, set to empty string('') for default, Not used with sqlite3
+        'OPTIONS': { 'init_command': 'SET default_storage_engine=INNODB;'}
     }
 }
 
@@ -103,9 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -118,3 +138,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
