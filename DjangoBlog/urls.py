@@ -15,10 +15,22 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 import xadmin
-from book.views import BookListView
+from book.views import BookListViewSet
+from blog.views import BlogListView
+from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'books', BookListViewSet)
+
 
 urlpatterns = [
-# '',
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', xadmin.site.urls),
-    url(r'books/$', BookListView.as_view(), name="books-list"),
+    url(r'^', include(router.urls)),
+    url(r'blogs/$', BlogListView.as_view(), name="blogs-list"),
+    # 文档
+    url(r'docs/', include_docs_urls(title='Your API',
+                                    authentication_classes=[],
+                                    permission_classes=[])),
 ]
